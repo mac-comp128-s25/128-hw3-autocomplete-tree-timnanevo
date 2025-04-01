@@ -24,6 +24,17 @@ public class PrefixTree {
      * @param word
      */
     public void add(String word){
+        TreeNode current = root;
+        for (int i = 0; i < word.length(); i++){
+            char ch = word.charAt(i);
+            if (!current.children.containsKey(ch)){
+                TreeNode node = new TreeNode();
+                node.letter = ch;
+                current.children.put(ch, node);
+                current = current.children.get(ch);
+            }
+            current.isWord = true;
+        }
         //TODO: complete me
     }
 
@@ -33,8 +44,19 @@ public class PrefixTree {
      * @return true if contained in the tree.
      */
     public boolean contains(String word){
+        TreeNode current = root;
+        for (int i = 0; i < word.length(); i++){
+            char ch = word.charAt(i);
+            if (!current.children.containsKey(ch)){
+                return false;
+            }
+            current = current.children.get(ch);    
+        }
+        if (current.isWord == true){
+            return true;
+        }
+        return false; 
         //TODO: complete me
-        return false;
     }
 
     /**
@@ -44,9 +66,33 @@ public class PrefixTree {
      * @return list of words with prefix
      */
     public ArrayList<String> getWordsForPrefix(String prefix){
+        
         //TODO: complete me
         return null;
     }
+
+//  /**
+// * Perform a preorder traversal.
+// *
+// * @param node  The local root
+// * @param depth The depth
+// * @param sb    The string buffer to save the output
+// */
+// private void preOrderTraverse(Node<E> node, int depth,
+//                              StringBuilder sb) {
+//    for (int i = 1; i < depth; i++) {
+//        sb.append("  ");
+//    }
+//    if (node == null) {
+//        sb.append("null\n");
+//    } else {
+//        sb.append(node.toString());
+//        sb.append("\n");
+//        preOrderTraverse(node.left, depth + 1, sb);
+//        preOrderTraverse(node.right, depth + 1, sb);
+//    }
+// }
+
 
     /**
      * @return the number of words in the tree

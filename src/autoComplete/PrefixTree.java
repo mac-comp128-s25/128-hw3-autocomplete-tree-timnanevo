@@ -42,7 +42,6 @@ public class PrefixTree {
         }
         current.isWord = true;
         this.size ++;
-        //TODO: complete me
     }
 
     /**
@@ -63,7 +62,6 @@ public class PrefixTree {
             return true;
         }
         return false; 
-        //TODO: complete me
     }
 
     /**
@@ -75,54 +73,35 @@ public class PrefixTree {
     public ArrayList<String> getWordsForPrefix(String prefix){
         ArrayList<String> results = new ArrayList<>();
         TreeNode current = root;
-        if(this.contains(prefix)){
-            results.add(prefix);
-        }
         for (int i = 0; i < prefix.length(); i++){
                 char ch = prefix.charAt(i);
                 if (!current.children.containsKey(ch)){
-                    return null;
+                    return results;
                 }
                 current = current.children.get(ch);    //get node at end of prefix
             }
-        TreeNode temp = current;
         StringBuilder sb = new StringBuilder();
         sb.append(prefix);
-        for (int i = 0; i < this.size(); i++){
-            temp.children.keySet();
+        performTraversal(current, sb, results);
+        return results;
+    }
+
+    /**
+    * Helper function to perform a preorder traversal to find words that start with a given prefix
+    * @param node  The current tree node to visit
+    * @param results The list of words that start with a given prefix
+    * @param sb  A stringbuilder that keeps track of full words
+    */
+    public void performTraversal(TreeNode node, StringBuilder sb, ArrayList<String> results){
+        if (node.isWord){
+            results.add(sb.toString());
         }
-        
-        //TODO: complete me
-        return null;
+        for (Map.Entry<Character, TreeNode> entry : node.children.entrySet()){
+            sb.append(entry.getKey());
+            performTraversal(entry.getValue(), sb, results);
+            sb.deleteCharAt(sb.length()-1);
+        }
     }
-
-    public void preOrderTraversal(TreeNode node, StringBuilder sb){
-        sb.append(node.toString());
-
-    }
-
-//  /**
-// * Perform a preorder traversal.
-// *
-// * @param node  The local root
-// * @param depth The depth
-// * @param sb    The string buffer to save the output
-// */
-// private void preOrderTraverse(Node<E> node, int depth,
-//                              StringBuilder sb) {
-//    for (int i = 1; i < depth; i++) {
-//        sb.append("  ");
-//    }
-//    if (node == null) {
-//        sb.append("null\n");
-//    } else {
-//        sb.append(node.toString());
-//        sb.append("\n");
-//        preOrderTraverse(node.left, depth + 1, sb);
-//        preOrderTraverse(node.right, depth + 1, sb);
-//    }
-// }
-
 
     /**
      * @return the number of words in the tree

@@ -24,7 +24,24 @@ public class PrefixTree {
      * @param word
      */
     public void add(String word){
-        //TODO: complete me
+        if (this.contains(word)){
+            return;
+        }
+        TreeNode current = root;
+        for (int i = 0; i < word.length(); i++){
+            char ch = word.charAt(i);
+            if (!current.children.containsKey(ch)){
+                TreeNode node = new TreeNode();
+                node.letter = ch;
+                current.children.put(ch, node);
+                current = current.children.get(ch);
+            }
+            else{
+                current = current.children.get(ch);
+            }
+        }
+        current.isWord = true;
+        this.size ++;
     }
 
     /**
@@ -33,8 +50,18 @@ public class PrefixTree {
      * @return true if contained in the tree.
      */
     public boolean contains(String word){
-        //TODO: complete me
-        return false;
+        TreeNode current = root;
+        for (int i = 0; i < word.length(); i++){
+            char ch = word.charAt(i);
+            if (!current.children.containsKey(ch)){
+                return false;
+            }
+            current = current.children.get(ch);    
+        }
+        if (current.isWord == true){
+            return true;
+        }
+        return false; 
     }
 
     /**
@@ -44,8 +71,36 @@ public class PrefixTree {
      * @return list of words with prefix
      */
     public ArrayList<String> getWordsForPrefix(String prefix){
-        //TODO: complete me
-        return null;
+        ArrayList<String> results = new ArrayList<>();
+        TreeNode current = root;
+        for (int i = 0; i < prefix.length(); i++){
+                char ch = prefix.charAt(i);
+                if (!current.children.containsKey(ch)){
+                    return results;
+                }
+                current = current.children.get(ch);    //get node at end of prefix
+            }
+        StringBuilder sb = new StringBuilder();
+        sb.append(prefix);
+        performTraversal(current, sb, results);
+        return results;
+    }
+
+    /**
+    * Helper function to perform a preorder traversal to find words that start with a given prefix
+    * @param node  The current tree node to visit
+    * @param results The list of words that start with a given prefix
+    * @param sb  A stringbuilder that keeps track of full words
+    */
+    public void performTraversal(TreeNode node, StringBuilder sb, ArrayList<String> results){
+        if (node.isWord){
+            results.add(sb.toString());
+        }
+        for (Map.Entry<Character, TreeNode> entry : node.children.entrySet()){
+            sb.append(entry.getKey());
+            performTraversal(entry.getValue(), sb, results);
+            sb.deleteCharAt(sb.length()-1);
+        }
     }
 
     /**

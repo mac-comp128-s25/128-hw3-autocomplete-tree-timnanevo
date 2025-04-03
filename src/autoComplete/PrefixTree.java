@@ -24,6 +24,9 @@ public class PrefixTree {
      * @param word
      */
     public void add(String word){
+        if (this.contains(word)){
+            return;
+        }
         TreeNode current = root;
         for (int i = 0; i < word.length(); i++){
             char ch = word.charAt(i);
@@ -33,8 +36,12 @@ public class PrefixTree {
                 current.children.put(ch, node);
                 current = current.children.get(ch);
             }
-            current.isWord = true;
+            else{
+                current = current.children.get(ch);
+            }
         }
+        current.isWord = true;
+        this.size ++;
         //TODO: complete me
     }
 
@@ -66,9 +73,32 @@ public class PrefixTree {
      * @return list of words with prefix
      */
     public ArrayList<String> getWordsForPrefix(String prefix){
+        ArrayList<String> results = new ArrayList<>();
+        TreeNode current = root;
+        if(this.contains(prefix)){
+            results.add(prefix);
+        }
+        for (int i = 0; i < prefix.length(); i++){
+                char ch = prefix.charAt(i);
+                if (!current.children.containsKey(ch)){
+                    return null;
+                }
+                current = current.children.get(ch);    //get node at end of prefix
+            }
+        TreeNode temp = current;
+        StringBuilder sb = new StringBuilder();
+        sb.append(prefix);
+        for (int i = 0; i < this.size(); i++){
+            temp.children.keySet();
+        }
         
         //TODO: complete me
         return null;
+    }
+
+    public void preOrderTraversal(TreeNode node, StringBuilder sb){
+        sb.append(node.toString());
+
     }
 
 //  /**
